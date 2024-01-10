@@ -1,3 +1,4 @@
+import socket
 
 
 class GameField:
@@ -22,7 +23,28 @@ class GameField:
         for row in self.FIELD:
             string_field += str(row) + "\n"
 
-        print(string_field, "\r")
+        return string_field
+
+
+    def create_server(self, ip: str, port: int):
+        """Создаёт сервер на компьютере и для сетевой
+        игры с другими игроками."""
+
+
+        server_socket = socket.socket(socket.AF_INET,
+                                      socket.SOCK_STREAM)
+
+        server_socket.bind((ip, port))
+        server_socket.listen(1)
+
+        print(f"Сервер успешно запущен. Порт: {port}")
+
+        client_socket, addr = server_socket.accept()
+
+        print(f"К серверу успешно подключился {addr}")
+
+        return client_socket, addr
+
 
 
     def set_krestik_or_nolik(self, krestik_or_nolik: str,
