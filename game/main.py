@@ -1,6 +1,7 @@
 from classes import GameField
 import os
 import socket
+import time
 
 
 def connect_to_game(ip: str, port: int, GF: GameField):
@@ -10,19 +11,48 @@ def connect_to_game(ip: str, port: int, GF: GameField):
     sock.connect((ip, port))
 
     print("Вы успешно подключились к игре.")
+    time.sleep(1)
 
     while True:
+        os.system('cls||clear')
         data = sock.recv(1024)
 
         print(data.decode()) # Выводим полученное от сервера поле
-        print("Ждите пока противник сделает свой ход")
 
+        if data:
+            data_list = data.decode().split("\n")
+            data_list.pop(3)
+            data_list = [eval(item) for item in data_list]
+
+            text, game_flag = GF.check_field(data_list)
+
+            if game_flag:
+                os.system('cls||clear')
+                GF.print_field()
+                print(text)
+                break
+
+        print("Ждите пока противник сделает свой ход")
         data = sock.recv(1024)
 
         if not data:
             break
-
+        os.system("cls||clear")
         print(data.decode())
+
+        if data:
+            data_list = data.decode().split("\n")
+            data_list.pop(3)
+            data_list = [eval(item) for item in data_list]
+
+            text, game_flag = GF.check_field(data_list)
+
+            if game_flag:
+                os.system('cls||clear')
+                GF.print_field()
+                print(text)
+                break
+
         print("Противник сделал свой ход, теперь ваша очередь")
 
         X_or_O = input("X or O: ")
@@ -44,6 +74,8 @@ def create_server_for_game(ip: str, port: int, GF: GameField):
     client_socket, addr = GF.create_server(ip, port)
 
     game_flag = False
+    time.sleep(1)
+    os.system("cls||clear")
 
     while True:
         print(GF.print_field())
@@ -53,6 +85,10 @@ def create_server_for_game(ip: str, port: int, GF: GameField):
                 krestik_or_nolik=input("X or O: "),
                              y=int(input("y : ")),
                              x=int(input("x : ")))
+        os.system("cls||clear")
+        print(GF.print_field())
+
+        client_socket.sendall(GF.print_field().encode())
 
         text, game_flag = GF.check_field()
 
@@ -60,11 +96,7 @@ def create_server_for_game(ip: str, port: int, GF: GameField):
             os.system('cls||clear')
             GF.print_field()
             print(text)
-            client_socket.sendall(GF.print_field().encode())
-            client_socket.sendall(text.encode())
             break
-
-        client_socket.sendall(GF.print_field().encode())
 
         print("Вы сделали свой ход, теперь ждём противника.")
 

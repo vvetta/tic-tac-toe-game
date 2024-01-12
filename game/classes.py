@@ -54,15 +54,21 @@ class GameField:
         self.FIELD[y][x] = krestik_or_nolik
 
 
-    def check_field(self):
+    def check_field(self, client_field=None):
         """Проверяет поле на наличие победителя."""
 
         cells = []
 
-        for row in self.FIELD:
-            cells.append(row[0])
-            cells.append(row[1])
-            cells.append(row[2])
+        if not client_field:
+            for row in self.FIELD:
+                cells.append(row[0])
+                cells.append(row[1])
+                cells.append(row[2])
+        else:
+            for row in client_field:
+                cells.append(row[0])
+                cells.append(row[1])
+                cells.append(row[2])
 
         if (cells[0] == cells[1] and cells[1] == cells[2]) and cells[0] != []:
             # Первая строка заполнена одинаковыми знаками,
