@@ -17,7 +17,7 @@ def connect_to_game(ip: str, port: int, GF: GameField):
         os.system('cls||clear')
         data = sock.recv(1024)
 
-        print(data.decode()) # Выводим полученное от сервера поле
+        print(data.decode())  # Выводим полученное от сервера поле
 
         if data:
             data_list = data.decode().split("\n")
@@ -66,7 +66,6 @@ def connect_to_game(ip: str, port: int, GF: GameField):
         os.system("cls||clear")
 
 
-
 def create_server_for_game(ip: str, port: int, GF: GameField):
     """Создаёт сервер, к которому может
     присоеденится другой игрок."""
@@ -82,9 +81,9 @@ def create_server_for_game(ip: str, port: int, GF: GameField):
         client_socket.sendall(GF.print_field().encode())
 
         GF.set_krestik_or_nolik(
-                krestik_or_nolik=input("X or O: "),
-                             y=int(input("y : ")),
-                             x=int(input("x : ")))
+            krestik_or_nolik=input("X or O: "),
+            y=int(input("y : ")),
+            x=int(input("x : ")))
         os.system("cls||clear")
         print(GF.print_field())
 
@@ -115,10 +114,8 @@ def create_server_for_game(ip: str, port: int, GF: GameField):
             client_socket.sendall(text.encode())
             break
 
-
         if not data:
             break
-
 
         os.system('cls||clear')
 
@@ -126,7 +123,6 @@ def create_server_for_game(ip: str, port: int, GF: GameField):
 def game_mode(GF: GameField):
     """Функция, которая позволяет выбрать
     игровой режим (Сетевая игра / На одном устройстве)."""
-
 
     print("Выбирите игровой режим: 1) Сетевая игра \n \
             2) Игра на одном устройстве.")
@@ -143,7 +139,7 @@ def game_mode(GF: GameField):
         if answer_input == 1:
             # Запускает сервер на устройстве игрока.
             create_server_for_game(ip=input("Введите ip: "), GF=GF, \
-                                    port=int(input("Введите порт: ")))
+                                   port=int(input("Введите порт: ")))
 
         elif answer_input == 2:
             # Подключаеться к уже созданной игре.
@@ -165,7 +161,6 @@ def game():
     GF = GameField()
 
     game_mode(GF)
-
 
 
 if __name__ == "__main__":
